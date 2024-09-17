@@ -1,0 +1,71 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "# > Objetivo\n",
+    "# - Obtendo produtos do Mercado Livre a partir de uma busca realizada pelo usuário\n",
+    "\n",
+    "import requests\n",
+    "from bs4 import BeautifulSoup\n",
+    "\n",
+    "url_base = 'https://lista.mercadolivre.com.br/'\n",
+    "\n",
+    "produto_nome = input('Qual produto você deseja? ')\n",
+    "\n",
+    "response = requests.get(url_base + produto_nome)\n",
+    "\n",
+    "site = BeautifulSoup(response.text, 'html.parser')\n",
+    "\n",
+    "produtos = site.findAll('div', attrs={'class': 'andes-card andes-card--flat andes-card--default ui-search-result ui-search-result--core andes-card--padding-default'})\n",
+    "\n",
+    "for produto in produtos:\n",
+    "    titulo = produto.find('h2', attrs={'class': 'ui-search-item__title'})\n",
+    "    link = produto.find('a', attrs={'class': 'ui-search-link'})\n",
+    "\n",
+    "    real = produto.find('span', attrs={'class': 'price-tag-fraction'})\n",
+    "    centavos = produto.find('span', attrs={'class': 'price-tag-cents'})\n",
+    "\n",
+    "    print(produto.prettify())\n",
+    "    print('Título do produto:', titulo.text)\n",
+    "    print('Link do produto:', link['href'])\n",
+    "\n",
+    "    if (centavos):\n",
+    "        print('Preço do produto: R$', real.text + ',' + centavos.text)\n",
+    "    else:\n",
+    "        print('Preço do produto: R$', real.text)\n",
+    "     \n",
+    "    print('\\n\\n')\n",
+    "    break\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
